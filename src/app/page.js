@@ -1,13 +1,14 @@
 "use client"
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { socketConnection } from '@/Bitsin'
 
 const Page = () => {
-  const[message,setMessage] = useState(null)
-  const[selected,setSelected] = useState(null)
 
-  console.log(message);
 
+  useEffect(() => {
+    socketConnection()
+  }, []);
 
   return (
     <div>
