@@ -1,5 +1,6 @@
 "use client"
 import { JoinRoom, LeaveRoom } from '@/Bitsin'
+import axios from 'axios'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
@@ -14,6 +15,7 @@ useEffect(()=>{
 // detaylar çekildi
 
 JoinRoom()
+
 
 },[])
 
