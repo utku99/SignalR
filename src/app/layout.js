@@ -1,11 +1,13 @@
-import { Inter } from "next/font/google";
+import ReduxProvider from "@/redux/reduxProvider";
 
 
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <ReduxProvider>
       <body >{children}</body>
+      </ReduxProvider>
     </html>
   );
 }
