@@ -7,50 +7,54 @@ import * as signalR from "@microsoft/signalr"
 
 
 const Page = () => {
-  const {connection} = useSelector(state => state.connection)
+  const { connection } = useSelector(state => state.connection)
   const dispatch = useDispatch()
 
 
-  useEffect(()=>{
-    const temp =  new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:7177/chathub")
-    .configureLogging(signalR.LogLevel.None)
-    .build()
-     dispatch(setConnection(temp))
-  },[])
+
 
   useEffect(() => {
+    const temp = new signalR.HubConnectionBuilder()
+      .withUrl("https://localhost:7177/chathub")
+      // .configureLogging(signalR.LogLevel.None)
+      .withAutomaticReconnect()
+      .build()
+    dispatch(setConnection(temp))
+  }, [])
 
-// connection.on("forceDisconnect", (message) => {
-//     connection.stop();
-// });
+  useEffect(() => {
+    if(connection){
+(async()=>{
+  try {
+   await connection?.start()
 
-connection?.on("GetConnectionId", (message) => {
-    console.log(message);
-});
+    connection?.invoke("LoginMessageHub", { UserID: 24, TypeID: 3 })
 
-connection?.on("SendMessage", (message) => {
-    console.log(message);
-});
+    connection?.on("forceDisconnect", (message) => {
+      connection.stop();
+    });
 
-// connection.on("ForceLogout", (message) => {
-//   connection.invoke("Logout")
-// });
+    connection?.on("GetConnectionId", (message) => {
+      console.log(message);
+    });
 
-
-connection?.start().then((a) => {
-    //   connection.invoke("WebRegister")
-    console.log(a, "start success");
-}).catch((error) => {
+    connection?.on("MessageReceived", (message) => {
+      console.log(message, "MessageReceived");
+    });
+    
+  } catch (error) {
     console.log(error, "start error");
-});
-
+    
+  }
+})
+  }
   }, [connection]);
+
 
 
   return (
     <div>
-    <Link href="/mesajlar">Mesajlar</Link>
+      <Link href="/mesajlar">Mesajlar</Link>
     </div>
   )
 }
